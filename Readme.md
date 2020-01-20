@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Renko Hens](https://up.htmlacademy.ru/javascript/19/user/525315).
-* Наставник: `Александр Уразаев`.
+* Наставник: [Александр Уразаев](https://htmlacademy.ru/profile/urazaev).
 
 ---
 
