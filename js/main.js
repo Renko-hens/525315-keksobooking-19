@@ -3,6 +3,9 @@
 var MIN = 1;
 var MAX = 10;
 
+var MIN_PRICE = 0;
+var MAX_PRICE = 1000;
+
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
@@ -10,8 +13,10 @@ var MIN_MAP_WIDTH = 0;
 var MAX_MAP_WIDTH = 1200;
 var MIN_MAP_HEIGHT = 130;
 var MAX_MAP_HEIGHT = 630;
+
 var POPUP_PHOTO_WIDTH = 45;
 var POPUP_PHOTO_HEIGHT = 40;
+
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -22,25 +27,16 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var mapPins = document.querySelector('.map__pins');
 
 var randomNumber = function (min, max) {
-  var number = 0;
-  if (min >= 0 && max) {
-    // Максимум и минимум работают.
-    number = Math.floor(min + Math.random() * (max + 1 - min));
-  } else {
-    // Рандомное число до 999
-    number = Math.floor(Math.random() * 10000);
-  }
-  return number;
+  return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
-var getRandomElementArray = function (quantity) {
-  var i = randomNumber(0, quantity.length - 1);
-  return quantity[i];
+var getRandomElementArray = function (array) {
+  var i = randomNumber(0, array.length - 1);
+  return array[i];
 };
 
 var getRandomArray = function (array) {
-  var newArray = array.slice(Math.floor(Math.random() * array.length - 1));
-  return newArray;
+  return array.slice(Math.floor(Math.random() * array.length - 1));
 };
 
 var createMocksData = function (count) {
@@ -52,8 +48,8 @@ var createMocksData = function (count) {
       },
       'offer': {
         'title': 'Заголовок объявления',
-        'address': 'location.x, location.y',
-        'price': randomNumber(),
+        'address': '600, 350',
+        'price': randomNumber(MIN_PRICE, MAX_PRICE),
         'type': getRandomElementArray(TYPES),
         'rooms': randomNumber(MIN, MAX),
         'guests': randomNumber(MIN, MAX),
@@ -72,107 +68,105 @@ var createMocksData = function (count) {
   return array;
 };
 
-// Записываю массив в переменную для обращения к нему.
 var mocks = createMocksData(8);
 
-// Создаем функцию для создания отметки с данными по шаблону для копирования.
-var createPin = function (objData, template) {
-  var element = template.cloneNode(true);
-  element.style.cssText = 'left: ' + (objData.location.x - (PIN_WIDTH / 2)) + 'px;' + 'top: ' + (objData.location.y - (PIN_HEIGHT / 2)) + 'px;';
-  element.querySelector('img').src = objData.author.avatar;
-  element.querySelector('img').alt = objData.offer.title;
-  return element;
+var createPin = function (data, template) {
+  var pin = template.cloneNode(true);
+  pin.style.cssText = 'left: ' + (data.location.x - (PIN_WIDTH / 2)) + 'px;' + 'top: ' + (data.location.y - (PIN_HEIGHT / 2)) + 'px;';
+  pin.querySelector('img').src = data.author.avatar;
+  pin.querySelector('img').alt = data.offer.title;
+  return pin;
 };
 
-// Добавляем на страницу отметку с массивом данных и вставкой в блок.
-var renderPin = function (arrayData, parent) {
+var renderPin = function (arrayData, parent, template) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arrayData.length; i++) {
-    fragment.appendChild(createPin(arrayData[i], pinTemplate));
+    fragment.appendChild(createPin(arrayData[i], template));
   }
   parent.appendChild(fragment);
 };
 
-renderPin(mocks, mapPins);
+renderPin(mocks, mapPins, pinTemplate);
 
-var choiceHousingType = function (type) {
-  var typeHouse;
-  if (type === 'palace') {
-    typeHouse = 'Дворец';
-  } else if (type === 'flat') {
-    typeHouse = 'Квартира';
-  } else if (type === 'house') {
-    typeHouse = 'Дом';
-  } else if (type === 'bungalo') {
-    typeHouse = 'Бунгало';
+var getHouseType = function (type) {
+  var houseType;
+  switch (type) {
+    case 'palace':
+      houseType = 'Дворец';
+      break;
+    case 'flat':
+      houseType = 'Квартира';
+      break;
+    case 'house':
+      houseType = 'Дом';
+      break;
+    case 'bungalo':
+      houseType = 'Бунгало';
+      break;
+    default:
+      houseType = 'Тип жилья не указан';
   }
-  return typeHouse;
+  return houseType;
 };
 
-var createFeatureElements = function (array) {
-  var arrayFeatures = [];
-  for (var i = 0; i < array.length; i++) {
-    if (array[i] === 'wifi' || array[i] === 'dishwasher' || array[i] === 'washer' || array[i] === 'parking' || array[i] === 'elevator' || array[i] === 'conditioner') {
-      arrayFeatures[i] = document.createElement('li');
-      arrayFeatures[i].classList.add('popup__feature', 'popup__feature--' + array[i]);
-      arrayFeatures.push(arrayFeatures[i]);
-    }
+var createFeatureElements = function (featuresDataList) {
+  var featuresFragment = document.createDocumentFragment();
+  for (var i = 0; i < featuresDataList.length; i++) {
+    var feature = document.createElement('li');
+    feature.classList.add('popup__feature', 'popup__feature--' + featuresDataList[i]);
+    featuresFragment.appendChild(feature);
   }
-  return arrayFeatures;
+  return featuresFragment;
 };
 
-var createImageElements = function (array) {
-  var arrayImages = [];
-  for (var i = 0; i < array.length; i++) {
-    arrayImages[i] = document.createElement('img');
-    arrayImages[i].classList.add('popup__photo');
-    arrayImages[i].src = array[i];
-    arrayImages[i].width = POPUP_PHOTO_WIDTH;
-    arrayImages[i].height = POPUP_PHOTO_HEIGHT;
-    arrayImages.push(arrayImages[i]);
+var createImageElements = function (imagesDataList) {
+  var imagesFragment = document.createDocumentFragment();
+
+  for (var i = 0; i < imagesDataList.length; i++) {
+    var image = document.createElement('img');
+    image.classList.add('popup__photo');
+    image.src = imagesDataList[i];
+    image.style.width = POPUP_PHOTO_WIDTH + 'px';
+    image.style.height = POPUP_PHOTO_HEIGHT + 'px';
+    imagesFragment.appendChild(image);
   }
-  return arrayImages;
+  return imagesFragment;
 };
 
-var createCard = function (objData, template) {
-  var offer = objData.offer;
-  var author = objData.author;
-  var element = template.cloneNode(true);
-  var featureList = element.querySelector('.popup__features');
-  var arrayFeatureElements = createFeatureElements(offer.features);
-  var imagesList = element.querySelector('.popup__photos');
-  var arrayImagesElements = createImageElements(offer.photos);
+var createCard = function (data, template) {
+  var card = template.cloneNode(true);
+  var offer = data.offer;
+  var author = data.author;
+  var featureListContainer = card.querySelector('.popup__features');
+  var featureElements = createFeatureElements(offer.features);
+  var imagesListContainer = card.querySelector('.popup__photos');
+  var imagesElements = createImageElements(offer.photos);
 
-  element.querySelector('.popup__avatar').src = author.avatar;
-  element.querySelector('.popup__title').textContent = offer.title;
-  element.querySelector('.popup__text--address').textContent = offer.address;
-  element.querySelector('.popup__text--price').textContent = offer.price + '₽/ночь';
-  element.querySelector('.popup__type').textContent = choiceHousingType(offer.type);
-  element.querySelector('.popup__text--capacity').textContent = offer.rooms + ' комнат для ' + offer.guests + ' гостей';
-  element.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
+  card.querySelector('.popup__avatar').src = author.avatar;
+  card.querySelector('.popup__title').textContent = offer.title;
+  card.querySelector('.popup__text--address').textContent = offer.address;
+  card.querySelector('.popup__text--price').textContent = offer.price + '₽/ночь';
+  card.querySelector('.popup__type').textContent = getHouseType(offer.type);
+  card.querySelector('.popup__text--capacity').textContent = offer.rooms + ' комнат для ' + offer.guests + ' гостей';
+  card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
+  card.querySelector('.popup__description').textContent = offer.description;
 
-  featureList.innerHTML = '';
-  for (var i = 0; i < arrayFeatureElements.length; i++) {
-    featureList.appendChild(arrayFeatureElements[i]);
-  }
+  featureListContainer.innerHTML = '';
+  featureListContainer.appendChild(featureElements);
 
-  element.querySelector('.popup__description').textContent = offer.description;
+  imagesListContainer.innerHTML = '';
+  imagesListContainer.appendChild(imagesElements);
 
-  imagesList.innerHTML = '';
-  for (var j = 0; j < arrayImagesElements.length; j++) {
-    imagesList.appendChild(arrayImagesElements[j]);
-  }
-
-  return element;
+  return card;
 };
 
-var renderCard = function (arrayData, element) {
+var renderCard = function (arrayData, sibling, template) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arrayData.length; i++) {
-    fragment.appendChild(createCard(arrayData[i], cardTemplate));
+    fragment.appendChild(createCard(arrayData[i], template));
   }
-  element.after(fragment);
+  sibling.after(fragment);
 };
 
-renderCard(mocks, mapPins);
+renderCard(mocks, mapPins, cardTemplate);
 document.querySelector('.map').classList.remove('map--faded');
