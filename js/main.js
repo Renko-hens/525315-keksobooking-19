@@ -6,6 +6,7 @@ var MAX = 10;
 var MIN_PRICE = 0;
 var MAX_PRICE = 1000;
 
+// Поменять на offset.Width элемента.
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
@@ -86,7 +87,7 @@ var renderPin = function (arrayData, parent, template) {
   parent.appendChild(fragment);
 };
 
-renderPin(mocks, mapPins, pinTemplate);
+// renderPin(mocks, mapPins, pinTemplate);
 
 var getHouseType = function (type) {
   var houseType;
@@ -168,5 +169,62 @@ var renderCard = function (arrayData, sibling, template) {
   sibling.after(fragment);
 };
 
-renderCard(mocks, mapPins, cardTemplate);
-document.querySelector('.map').classList.remove('map--faded');
+// renderCard(mocks, mapPins, cardTemplate);
+
+var firstPin = document.querySelector('.map__pin--main');
+var LEFT_BUTTON_MOUSE = 0;
+var ENTER_BUTTON = 'Enter';
+// var ESCAPE_BUTTON = 'Escape';
+var map = document.querySelector('.map');
+var adForm = document.querySelector('.ad-form');
+var mapFilters = map.querySelectorAll('.map__filter');
+var mapFeatures = map.querySelectorAll('.map__features');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
+
+var formElementDisabled = function (collectionElements) {
+  for (var i = 0; i < collectionElements.length; i++) {
+    collectionElements[i].disabled = true;
+  }
+};
+
+var formElementEnabled = function (collectionElements) {
+  for (var i = 0; i < collectionElements.length; i++) {
+    collectionElements[i].disabled = false;
+  }
+};
+
+var disableInterface = function () {
+  formElementDisabled(mapFilters);
+  formElementDisabled(mapFeatures);
+  formElementDisabled(adFormFieldsets);
+};
+
+var enableInterface = function () {
+  formElementEnabled(mapFilters);
+  formElementEnabled(mapFeatures);
+  formElementEnabled(adFormFieldsets);
+};
+
+disableInterface();
+
+var activatePage = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+};
+
+var pinMoveMouseHandler = function (evt) {
+  if (evt.button === LEFT_BUTTON_MOUSE) {
+    activatePage();
+    enableInterface();
+  }
+};
+
+var pinPressHandler = function (evt) {
+  if (evt.key === ENTER_BUTTON) {
+    activatePage();
+    enableInterface();
+  }
+};
+
+firstPin.addEventListener('mousedown', pinMoveMouseHandler);
+firstPin.addEventListener('keydown', pinPressHandler);
