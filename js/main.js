@@ -9,7 +9,7 @@ var formMapFilters = map.querySelector('.map__filters');
 var adForm = document.querySelector('.ad-form');
 var inputAddress = adForm.querySelector('#address');
 var selectRooms = adForm.querySelector('#room_number');
-var selectCapacity = adForm.querySelector('#capacity');
+var selectGuest = adForm.querySelector('#capacity');
 
 var RADIX_NUMBER = 10;
 
@@ -87,7 +87,7 @@ var mocks = createMocksData(8);
 
 var createPin = function (data, template) {
   var pin = template.cloneNode(true);
-  pin.style.cssText = 'left: ' + (data.location.x - (PIN_WIDTH / 2)) + 'px;' + 'top: ' + (data.location.y - (PIN_HEIGHT / 2)) + 'px;';
+  pin.style.cssText = 'left: ' + (data.location.x - (PIN_WIDTH / 2)) + 'px;' + 'top: ' + (data.location.y - PIN_HEIGHT) + 'px;';
   pin.querySelector('img').src = data.author.avatar;
   pin.querySelector('img').alt = data.offer.title;
   return pin;
@@ -208,27 +208,33 @@ var enableInterface = function () {
 disableInterface();
 
 var selectChangeHandler = function () {
-  var numberValueSelectRoom = parseInt(selectRooms.value, RADIX_NUMBER);
-  var numberValueSelectCapacity = parseInt(selectCapacity.value, RADIX_NUMBER);
+  var rooms = parseInt(selectRooms.value, RADIX_NUMBER);
+  var guests = parseInt(selectGuest.value, RADIX_NUMBER);
+  var NO_FOR_GUEST = 0;
+  var ROOMS_100 = 100;
 
-  if (numberValueSelectRoom < numberValueSelectCapacity && numberValueSelectRoom !== numberValueSelectCapacity) {
-    selectRooms.setCustomValidity('Количество комнат меньше чем количество мест');
-    selectCapacity.setCustomValidity('Количество комнат меньше чем количество мест');
+  if (rooms === ROOMS_100 && guests > NO_FOR_GUEST) {
+    selectGuest.setCustomValidity('Для выбранного количества гостей размещение невозможно');
+  } else if (guests > rooms && guests !== rooms) {
+    selectGuest.setCustomValidity('Количество гостей больше или меньше чем комнат');
   } else {
-    selectRooms.setCustomValidity('');
-    selectCapacity.setCustomValidity('');
+    selectGuest.setCustomValidity('');
   }
 };
 
 var activatePage = function () {
   map.classList.remove('map--faded');
-  renderPin(mocks, mapPins, pinTemplate);
-  inputAddress.value = Math.floor(mainPinPositionX + (PIN_WIDTH / 2)) + ', ' + (mainPinPositionY + PIN_HEIGHT);
-  selectRooms.addEventListener('change', selectChangeHandler);
-  selectCapacity.addEventListener('change', selectChangeHandler);
-  adForm.addEventListener('click', selectChangeHandler);
   adForm.classList.remove('ad-form--disabled');
+
+  renderPin(mocks, mapPins, pinTemplate);
+
+  inputAddress.value = Math.floor(mainPinPositionX + (PIN_WIDTH / 2)) + ', ' + (mainPinPositionY + PIN_HEIGHT);
+  inputAddress.disabled = true;
+
   enableInterface();
+
+  selectRooms.addEventListener('change', selectChangeHandler);
+  adForm.addEventListener('click', selectChangeHandler);
 };
 
 var pinPressHandler = function (evt) {
@@ -238,7 +244,7 @@ var pinPressHandler = function (evt) {
 };
 
 var documentLoadHandler = function () {
-  inputAddress.value = Math.floor(mainPinPositionX + PIN_WIDTH / 2) + ', ' + mainPinPositionY;
+  inputAddress.value = Math.floor(mainPinPositionX + PIN_WIDTH / 2) + ', ' + Math.floor(mainPinPositionY + PIN_HEIGHT / 2);
 };
 
 mainPin.addEventListener('mousedown', pinPressHandler);
