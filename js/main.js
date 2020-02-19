@@ -11,8 +11,6 @@ var inputAddress = adForm.querySelector('#address');
 var selectRooms = adForm.querySelector('#room_number');
 var selectGuest = adForm.querySelector('#capacity');
 
-var RADIX_NUMBER = 10;
-
 var PIN_WIDTH = mainPin.offsetWidth;
 var PIN_HEIGHT = mainPin.offsetHeight;
 
@@ -40,6 +38,10 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 
 var ENTER_BUTTON = 'Enter';
 var LEFT_BUTTON_MOUSE = 0;
+
+var RADIX_NUMBER = 10;
+var NO_FOR_GUEST = 0;
+var ROOMS_100 = 100;
 
 var randomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -207,11 +209,23 @@ var enableInterface = function () {
 
 disableInterface();
 
+var activatePage = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+
+  renderPin(mocks, mapPins, pinTemplate);
+  enableInterface();
+
+  inputAddress.disabled = true;
+  inputAddress.value = Math.floor(mainPinPositionX + (PIN_WIDTH / 2)) + ', ' + (mainPinPositionY + PIN_HEIGHT);
+
+  selectRooms.addEventListener('change', selectChangeHandler);
+  adForm.addEventListener('click', selectChangeHandler);
+};
+
 var selectChangeHandler = function () {
   var rooms = parseInt(selectRooms.value, RADIX_NUMBER);
   var guests = parseInt(selectGuest.value, RADIX_NUMBER);
-  var NO_FOR_GUEST = 0;
-  var ROOMS_100 = 100;
 
   if (rooms === ROOMS_100 && guests > NO_FOR_GUEST) {
     selectGuest.setCustomValidity('Для выбранного количества гостей размещение невозможно');
@@ -220,21 +234,6 @@ var selectChangeHandler = function () {
   } else {
     selectGuest.setCustomValidity('');
   }
-};
-
-var activatePage = function () {
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-
-  renderPin(mocks, mapPins, pinTemplate);
-
-  inputAddress.value = Math.floor(mainPinPositionX + (PIN_WIDTH / 2)) + ', ' + (mainPinPositionY + PIN_HEIGHT);
-  inputAddress.disabled = true;
-
-  enableInterface();
-
-  selectRooms.addEventListener('change', selectChangeHandler);
-  adForm.addEventListener('click', selectChangeHandler);
 };
 
 var pinPressHandler = function (evt) {
