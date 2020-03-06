@@ -61,7 +61,11 @@
   };
 
   window.data = {
-    mocks: createMocksData(8)
+    mocks: createMocksData(8),
+    MIN_MAP_WIDTH: MIN_MAP_WIDTH,
+    MAX_MAP_WIDTH: MAX_MAP_WIDTH,
+    MIN_MAP_HEIGHT: MIN_MAP_HEIGHT,
+    MAX_MAP_HEIGHT: MAX_MAP_HEIGHT
   };
 
 })();

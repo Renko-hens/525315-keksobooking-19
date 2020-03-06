@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   var map = document.querySelector('.map');
   var formMapFilters = map.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
@@ -117,20 +116,40 @@
     }
   };
 
+
+  var activateForm = function () {
+    enableInterface();
+
+    inputAddress.disabled = true;
+    recordAddressOnTipEnd(true);
+    inputTitle.addEventListener('invalid', inputTitleValidationHandler);
+    inputPrice.addEventListener('invalid', inputPriceValidationHandler);
+    checkType();
+    selectType.addEventListener('change', selectTypeChangeHandler);
+    selectRooms.addEventListener('change', selectRoomChangeHandler);
+    fieldsetTimes.addEventListener('change', fieldsetTimeChangeHandler);
+
+    adForm.addEventListener('click', selectRoomChangeHandler);
+  };
+
+  var recordAddressOnTipEnd = function (onTipEnd) {
+    if (onTipEnd) {
+      inputAddress.value = Math.floor(window.pins.mainPin.offsetTop + (window.pins.MAIN_PIN_WIDTH_ACTIVE / 2)) + ', ' + (window.pins.mainPin.offsetLeft + window.pins.MAIN_PIN_HEIGHT_ACTIVE);
+    } else {
+      inputAddress.value = Math.floor(window.pins.mainPin.offsetTop + window.pins.MAIN_PIN_WIDTH_INACTIVE / 2) + ', ' + Math.floor(window.pins.mainPin.offsetLeft + window.pins.MAIN_PIN_HEIGHT_INACTIVE / 2);
+    }
+  };
+
+  var documentLoadHandler = function () {
+    recordAddressOnTipEnd();
+  };
+
+  document.addEventListener('DOMContentLoaded', documentLoadHandler);
+
   window.form = {
     adForm: adForm,
     inputAddress: inputAddress,
-    inputTitle: inputTitle,
-    fieldsetTimes: fieldsetTimes,
-    selectType: selectType,
-    inputPrice: inputPrice,
-    selectRooms: selectRooms,
-    enableInterface: enableInterface,
-    inputTitleValidationHandler: inputTitleValidationHandler,
-    selectTypeChangeHandler: selectTypeChangeHandler,
-    checkType: checkType,
-    inputPriceValidationHandler: inputPriceValidationHandler,
-    selectRoomChangeHandler: selectRoomChangeHandler,
-    fieldsetTimeChangeHandler: fieldsetTimeChangeHandler
+    activateForm: activateForm,
+    recordAddressOnTipEnd: recordAddressOnTipEnd
   };
 })();
