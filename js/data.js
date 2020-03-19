@@ -56,6 +56,6 @@
 // };
 
 // window.data = {
-  // mocks: createMocksData(8)
+// mocks: createMocksData(8)
 // };
 // })();
