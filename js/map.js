@@ -49,11 +49,9 @@
       map.addEventListener('click', mapClickHandler);
       map.addEventListener('keydown', mapPressHandler);
     }
-    return false;
   };
 
   window.map = {
-    activatePage: activatePage,
-    mapElement: map
+    activatePage: activatePage
   };
 })();

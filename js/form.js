@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var map = document.querySelector('.map');
+
   var formMapFilters = map.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
   var inputAddress = adForm.querySelector('#address');
@@ -18,7 +19,6 @@
   var NO_FOR_GUEST = 0;
   var ROOMS_100 = 100;
 
-  // Модуль form
   var formElementDisabled = function (collectionElements) {
     for (var i = 0; i < collectionElements.length; i++) {
       collectionElements[i].disabled = true;
@@ -43,18 +43,14 @@
 
   disableInterface();
 
-  var inputTitleValidationHandler = function () {
-    if (inputTitle.validity.valueMissing) {
-      inputTitle.setCustomValidity('Запишите название вашего лучшего жилья');
-    } else if (inputTitle.validity.tooShort || inputTitle.validity.tooLong) {
-      inputTitle.setCustomValidity('Заголовок состоит из минимально 30-ти символов или максимально из 100 символов');
-    } else {
-      inputTitle.setCustomValidity('');
-    }
-  };
+  var recordAddressOnTipEnd = function (onTipEnd) {
+    inputAddress.disabled = true;
 
-  var selectTypeChangeHandler = function () {
-    checkType();
+    if (onTipEnd) {
+      inputAddress.value = Math.floor(window.pins.mainPin.offsetTop + (window.pins.MAIN_PIN_WIDTH_ACTIVE / 2)) + ', ' + (window.pins.mainPin.offsetLeft + window.pins.MAIN_PIN_HEIGHT_ACTIVE);
+    } else {
+      inputAddress.value = Math.floor(window.pins.mainPin.offsetTop + window.pins.MAIN_PIN_WIDTH_INACTIVE / 2) + ', ' + Math.floor(window.pins.mainPin.offsetLeft + window.pins.MAIN_PIN_HEIGHT_INACTIVE / 2);
+    }
   };
 
   var checkType = function () {
@@ -83,6 +79,29 @@
     }
   };
 
+  var activateForm = function () {
+    enableInterface();
+    recordAddressOnTipEnd(true);
+    checkType();
+
+    inputTitle.addEventListener('invalid', inputTitleValidationHandler);
+    inputPrice.addEventListener('invalid', inputPriceValidationHandler);
+    selectType.addEventListener('change', selectTypeChangeHandler);
+    selectRooms.addEventListener('change', selectRoomChangeHandler);
+    fieldsetTimes.addEventListener('change', fieldsetTimeChangeHandler);
+    adForm.addEventListener('click', selectRoomChangeHandler);
+  };
+
+  var inputTitleValidationHandler = function () {
+    if (inputTitle.validity.valueMissing) {
+      inputTitle.setCustomValidity('Запишите название вашего лучшего жилья');
+    } else if (inputTitle.validity.tooShort || inputTitle.validity.tooLong) {
+      inputTitle.setCustomValidity('Заголовок состоит из минимально 30-ти символов или максимально из 100 символов');
+    } else {
+      inputTitle.setCustomValidity('');
+    }
+  };
+
   var inputPriceValidationHandler = function () {
     if (inputPrice.validity.valueMissing) {
       inputPrice.setCustomValidity('Укажите цену');
@@ -93,6 +112,10 @@
     } else {
       inputPrice.setCustomValidity('');
     }
+  };
+
+  var selectTypeChangeHandler = function () {
+    checkType();
   };
 
   var selectRoomChangeHandler = function () {
@@ -113,30 +136,6 @@
       checkout.selectedIndex = checkin.selectedIndex;
     } else if (evt.target.closest('#timeout')) {
       checkin.selectedIndex = checkout.selectedIndex;
-    }
-  };
-
-
-  var activateForm = function () {
-    enableInterface();
-
-    inputAddress.disabled = true;
-    recordAddressOnTipEnd(true);
-    inputTitle.addEventListener('invalid', inputTitleValidationHandler);
-    inputPrice.addEventListener('invalid', inputPriceValidationHandler);
-    checkType();
-    selectType.addEventListener('change', selectTypeChangeHandler);
-    selectRooms.addEventListener('change', selectRoomChangeHandler);
-    fieldsetTimes.addEventListener('change', fieldsetTimeChangeHandler);
-
-    adForm.addEventListener('click', selectRoomChangeHandler);
-  };
-
-  var recordAddressOnTipEnd = function (onTipEnd) {
-    if (onTipEnd) {
-      inputAddress.value = Math.floor(window.pins.mainPin.offsetTop + (window.pins.MAIN_PIN_WIDTH_ACTIVE / 2)) + ', ' + (window.pins.mainPin.offsetLeft + window.pins.MAIN_PIN_HEIGHT_ACTIVE);
-    } else {
-      inputAddress.value = Math.floor(window.pins.mainPin.offsetTop + window.pins.MAIN_PIN_WIDTH_INACTIVE / 2) + ', ' + Math.floor(window.pins.mainPin.offsetLeft + window.pins.MAIN_PIN_HEIGHT_INACTIVE / 2);
     }
   };
 

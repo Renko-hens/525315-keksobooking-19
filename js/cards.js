@@ -26,7 +26,7 @@
     return houseType;
   };
 
-  var createFeatureElements = function (featuresDataList) {
+  var createFeaturesFragment = function (featuresDataList) {
     var featuresFragment = document.createDocumentFragment();
     for (var i = 0; i < featuresDataList.length; i++) {
       var feature = document.createElement('li');
@@ -36,7 +36,7 @@
     return featuresFragment;
   };
 
-  var createImageElements = function (imagesDataList) {
+  var createImagesFragment = function (imagesDataList) {
     var imagesFragment = document.createDocumentFragment();
 
     for (var i = 0; i < imagesDataList.length; i++) {
@@ -55,9 +55,9 @@
     var offer = data.offer;
     var author = data.author;
     var featureListContainer = card.querySelector('.popup__features');
-    var featureElements = createFeatureElements(offer.features);
+    var featureElements = createFeaturesFragment(offer.features);
     var imagesListContainer = card.querySelector('.popup__photos');
-    var imagesElements = createImageElements(offer.photos);
+    var imagesElements = createImagesFragment(offer.photos);
 
     card.classList.add('hidden');
     card.setAttribute('data-card-id', data.offer.id);

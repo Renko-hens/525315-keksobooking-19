@@ -29,7 +29,6 @@
     parent.appendChild(fragment);
   };
 
-
   window.pins = {
     PIN_WIDTH: PIN_WIDTH,
     PIN_HEIGHT: PIN_HEIGHT,

@@ -17,12 +17,12 @@
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-  var randomNumber = function (min, max) {
+  var getRandomNumber = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   };
 
   var getRandomElementArray = function (array) {
-    var i = randomNumber(0, array.length - 1);
+    var i = getRandomNumber(0, array.length - 1);
     return array[i];
   };
 
@@ -40,10 +40,10 @@
         'offer': {
           'title': 'Заголовок объявления',
           'address': '600, 350',
-          'price': randomNumber(MIN_PRICE, MAX_PRICE),
+          'price': getRandomNumber(MIN_PRICE, MAX_PRICE),
           'type': getRandomElementArray(TYPES),
-          'rooms': randomNumber(MIN, MAX),
-          'guests': randomNumber(MIN, MAX),
+          'rooms': getRandomNumber(MIN, MAX),
+          'guests': getRandomNumber(MIN, MAX),
           'checkin': getRandomElementArray(TIMES),
           'checkout': getRandomElementArray(TIMES),
           'features': getRandomArray(FEATURES),
@@ -52,8 +52,8 @@
           'id': i
         },
         'location': {
-          'x': randomNumber(MIN_MAP_WIDTH, MAX_MAP_WIDTH),
-          'y': randomNumber(MIN_MAP_HEIGHT, MAX_MAP_HEIGHT)
+          'x': getRandomNumber(MIN_MAP_WIDTH, MAX_MAP_WIDTH),
+          'y': getRandomNumber(MIN_MAP_HEIGHT, MAX_MAP_HEIGHT)
         }
       });
     }
@@ -61,11 +61,11 @@
   };
 
   window.data = {
-    mocks: createMocksData(8),
     MIN_MAP_WIDTH: MIN_MAP_WIDTH,
     MAX_MAP_WIDTH: MAX_MAP_WIDTH,
     MIN_MAP_HEIGHT: MIN_MAP_HEIGHT,
-    MAX_MAP_HEIGHT: MAX_MAP_HEIGHT
+    MAX_MAP_HEIGHT: MAX_MAP_HEIGHT,
+    mocks: createMocksData(8)
   };
 
 })();

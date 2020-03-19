@@ -1,11 +1,12 @@
 'use strict';
 (function () {
+  var map = document.querySelector('.map');
   var ENTER_BUTTON = 'Enter';
   var LEFT_BUTTON_MOUSE = 0;
 
   var limits = {
-    left: window.map.mapElement.offsetLeft,
-    right: window.map.mapElement.offsetWidth + window.map.mapElement.offsetLeft,
+    left: map.offsetLeft,
+    right: map.offsetWidth + map.offsetLeft,
     top: window.data.MIN_MAP_HEIGHT - (window.pins.MAIN_PIN_WIDTH_INACTIVE / 2),
     bottom: window.data.MAX_MAP_HEIGHT - (window.pins.MAIN_PIN_WIDTH_INACTIVE / 2),
   };
@@ -30,7 +31,7 @@
         if (evt.clientX < limits.left) {
           window.pins.mainPin.style.left = (window.data.MIN_MAP_WIDTH - window.pins.MAIN_PIN_WIDTH_ACTIVE / 2) + 'px';
         } else if (evt.clientX > limits.right) {
-          window.pins.mainPin.style.left = (window.map.mapElement.offsetWidth - window.pins.MAIN_PIN_WIDTH_ACTIVE / 2) + 'px';
+          window.pins.mainPin.style.left = (map.offsetWidth - window.pins.MAIN_PIN_WIDTH_ACTIVE / 2) + 'px';
         } else {
           window.pins.mainPin.style.left = (window.pins.mainPin.offsetLeft - shift.x) + 'px';
         }
