@@ -12,9 +12,9 @@
   var MAIN_PIN_HEIGHT_INACTIVE = 65;
 
   // Модуль Пина
-  var createPin = function (data, template) {
+  var createPin = function (data, template, pinId) {
     var pin = template.cloneNode(true);
-    pin.setAttribute('data-pin-id', data.offer.id);
+    pin.setAttribute('data-pin-id', pinId);
     pin.style.cssText = 'left: ' + (data.location.x - (PIN_WIDTH / 2)) + 'px;' + 'top: ' + (data.location.y - (PIN_HEIGHT / 2)) + 'px;';
     pin.querySelector('img').src = data.author.avatar;
     pin.querySelector('img').alt = data.offer.title;
@@ -24,11 +24,11 @@
   var renderPin = function (arrayData, parent, template) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arrayData.length; i++) {
-      fragment.appendChild(createPin(arrayData[i], template));
+      var pinIndex = i;
+      fragment.appendChild(createPin(arrayData[i], template, pinIndex));
     }
     parent.appendChild(fragment);
   };
-
 
   window.pins = {
     PIN_WIDTH: PIN_WIDTH,

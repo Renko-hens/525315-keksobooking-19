@@ -50,7 +50,7 @@
     return imagesFragment;
   };
 
-  var createCard = function (data, template) {
+  var createCard = function (data, template, cardId) {
     var card = template.cloneNode(true);
     var offer = data.offer;
     var author = data.author;
@@ -60,7 +60,7 @@
     var imagesElements = createImageElements(offer.photos);
 
     card.classList.add('hidden');
-    card.setAttribute('data-card-id', data.offer.id);
+    card.setAttribute('data-card-id', cardId);
 
     card.querySelector('.popup__avatar').src = author.avatar;
     card.querySelector('.popup__title').textContent = offer.title;
@@ -83,7 +83,8 @@
   var renderCard = function (arrayData, sibling, template) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arrayData.length; i++) {
-      fragment.appendChild(createCard(arrayData[i], template));
+      var cardIndex = i;
+      fragment.appendChild(createCard(arrayData[i], template, cardIndex));
     }
     sibling.after(fragment);
   };

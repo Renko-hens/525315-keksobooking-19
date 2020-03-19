@@ -6,8 +6,8 @@
   var limits = {
     left: window.map.mapElement.offsetLeft,
     right: window.map.mapElement.offsetWidth + window.map.mapElement.offsetLeft,
-    top: window.data.MIN_MAP_HEIGHT - (window.pins.MAIN_PIN_WIDTH_INACTIVE / 2),
-    bottom: window.data.MAX_MAP_HEIGHT - (window.pins.MAIN_PIN_WIDTH_INACTIVE / 2),
+    top: window.map.MIN_MAP_HEIGHT - (window.pins.MAIN_PIN_WIDTH_INACTIVE / 2),
+    bottom: window.map.MAX_MAP_HEIGHT - (window.pins.MAIN_PIN_WIDTH_INACTIVE / 2),
   };
 
   var pinClickHandler = function (clickEvt) {
@@ -28,7 +28,7 @@
         };
 
         if (evt.clientX < limits.left) {
-          window.pins.mainPin.style.left = (window.data.MIN_MAP_WIDTH - window.pins.MAIN_PIN_WIDTH_ACTIVE / 2) + 'px';
+          window.pins.mainPin.style.left = (window.map.MIN_MAP_WIDTH - window.pins.MAIN_PIN_WIDTH_ACTIVE / 2) + 'px';
         } else if (evt.clientX > limits.right) {
           window.pins.mainPin.style.left = (window.map.mapElement.offsetWidth - window.pins.MAIN_PIN_WIDTH_ACTIVE / 2) + 'px';
         } else {
