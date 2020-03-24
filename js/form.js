@@ -116,11 +116,11 @@
     }
   };
 
-
   var activateForm = function () {
     enableInterface();
 
-    inputAddress.disabled = true;
+    inputAddress.readOnly = true;
+
     recordAddressOnTipEnd(true);
     inputTitle.addEventListener('invalid', inputTitleValidationHandler);
     inputPrice.addEventListener('invalid', inputPriceValidationHandler);
@@ -130,6 +130,7 @@
     fieldsetTimes.addEventListener('change', fieldsetTimeChangeHandler);
 
     adForm.addEventListener('click', selectRoomChangeHandler);
+    adForm.addEventListener('submit', adFormSubmitHandler);
   };
 
   var recordAddressOnTipEnd = function (onTipEnd) {
@@ -144,11 +145,23 @@
     recordAddressOnTipEnd();
   };
 
+  var formSubmitError = function (errorMessage) {
+    console.log(errorMessage);
+  };
+
+  var formSubmitSucsess = function () {
+    window.map.deactivatePage();
+  };
+
+  var adFormSubmitHandler = function (evt) {
+    evt.preventDefault();
+    window.backend.submit(new FormData(adForm), formSubmitSucsess, formSubmitError);
+  };
+
   document.addEventListener('DOMContentLoaded', documentLoadHandler);
 
   window.form = {
     adForm: adForm,
-    inputAddress: inputAddress,
     activateForm: activateForm,
     recordAddressOnTipEnd: recordAddressOnTipEnd
   };

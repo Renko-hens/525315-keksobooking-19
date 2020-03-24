@@ -72,8 +72,22 @@
     return false;
   };
 
+  var deactivatePage = function () {
+    if (!map.classList.contains('map--faded')) {
+      map.classList.add('map--faded');
+      window.form.adForm.classList.add('ad-form--disabled');
+
+      window.form.deactivateForm();
+
+      map.removeEventListener('click', mapClickHandler);
+      map.removeEventListener('keydown', mapPressHandler);
+    }
+    return false;
+  };
+
   window.map = {
     activatePage: activatePage,
+    deactivatePage: deactivatePage,
     mapElement: map,
     MIN_MAP_WIDTH: MIN_MAP_WIDTH,
     MAX_MAP_WIDTH: MAX_MAP_WIDTH,
