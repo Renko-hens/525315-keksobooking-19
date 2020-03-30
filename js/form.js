@@ -117,9 +117,9 @@
     }
   };
 
-  function logReset(evt) {
-    console.log('lel');
-  }
+  // function logReset(evt) {
+  //   console.log('lel');
+  // }
 
 
   var activateForm = function () {
@@ -137,7 +137,7 @@
 
     adForm.addEventListener('click', selectRoomChangeHandler);
     adForm.addEventListener('submit', adFormSubmitHandler);
-    buttonReset.addEventListener('reset', logReset);
+    // buttonReset.addEventListener('reset', logReset);
   };
 
   var cleanForm = function () {
