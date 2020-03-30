@@ -89,5 +89,16 @@
     sibling.after(fragment);
   };
 
-  window.card.renderCard = renderCard;
+  var cardsClean = function () {
+    var cards = document.querySelectorAll('.map__card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].remove();
+    }
+  };
+
+  window.cards = {
+    renderCard: renderCard,
+    cardsClean: cardsClean
+  };
+
 })();

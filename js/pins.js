@@ -2,6 +2,10 @@
 
 (function () {
   var mainPin = document.querySelector('.map__pin--main');
+  var mainPinStyle = window.getComputedStyle(mainPin, null);
+  var prevPinTop = mainPinStyle.top;
+  var prevPinLeft = mainPinStyle.left;
+
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
 
@@ -30,6 +34,18 @@
     parent.appendChild(fragment);
   };
 
+  var pinsClean = function () {
+    var pins = document.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      } else {
+        pins[i].style.top = prevPinTop;
+        pins[i].style.left = prevPinLeft;
+      }
+    }
+  };
+
   window.pins = {
     PIN_WIDTH: PIN_WIDTH,
     PIN_HEIGHT: PIN_HEIGHT,
@@ -38,7 +54,8 @@
     MAIN_PIN_WIDTH_INACTIVE: MAIN_PIN_WIDTH_INACTIVE,
     MAIN_PIN_HEIGHT_INACTIVE: MAIN_PIN_HEIGHT_INACTIVE,
     mainPin: mainPin,
-    renderPin: renderPin
+    renderPin: renderPin,
+    pinsClean: pinsClean,
   };
 
 })();

@@ -53,7 +53,7 @@
     xhr.send();
   };
 
-  var submit = function (data, loadSuccsesCallback, errorDataCallback) {
+  var submit = function (data, loadSuccessCallback, errorDataCallback) {
     var URL = 'https://js.dump.academy/keksobooking';
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -63,7 +63,7 @@
     xhr.addEventListener('load', function () {
       switch (xhr.status) {
         case statusCode.OK:
-          loadSuccsesCallback();
+          loadSuccessCallback();
           buttonSubmit.textContent = 'Сохранить';
           buttonSubmit.disabled = false;
           break;

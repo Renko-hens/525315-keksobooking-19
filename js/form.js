@@ -5,6 +5,7 @@
   var adForm = document.querySelector('.ad-form');
   var inputAddress = adForm.querySelector('#address');
   var inputTitle = adForm.querySelector('#title');
+  var buttonReset = adForm.querySelector('.ad-form__reset');
 
   var fieldsetTimes = adForm.querySelector('.ad-form__element--time');
   var selectType = adForm.querySelector('#type');
@@ -116,6 +117,11 @@
     }
   };
 
+  function logReset(evt) {
+    console.log('lel');
+  }
+
+
   var activateForm = function () {
     enableInterface();
 
@@ -131,7 +137,14 @@
 
     adForm.addEventListener('click', selectRoomChangeHandler);
     adForm.addEventListener('submit', adFormSubmitHandler);
+    buttonReset.addEventListener('reset', logReset);
   };
+
+  var cleanForm = function () {
+    adForm.reset();
+    disableInterface();
+  };
+
 
   var recordAddressOnTipEnd = function (onTipEnd) {
     if (onTipEnd) {
@@ -146,16 +159,20 @@
   };
 
   var formSubmitError = function (errorMessage) {
-    console.log(errorMessage);
+    window.state.renderStateElement(window.state.errorTemplate, window.state.main, errorMessage);
+    window.state.addErrorListener();
   };
 
-  var formSubmitSucsess = function () {
-    window.map.deactivatePage();
+  var formSubmitSuccess = function () {
+    window.map.deactivateMap();
+    cleanForm();
+    window.state.renderStateElement(window.state.successTemplate, window.state.main);
+    window.state.addSuccessListener();
   };
 
   var adFormSubmitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.submit(new FormData(adForm), formSubmitSucsess, formSubmitError);
+    window.backend.submit(new FormData(adForm), formSubmitSuccess, formSubmitError);
   };
 
   document.addEventListener('DOMContentLoaded', documentLoadHandler);

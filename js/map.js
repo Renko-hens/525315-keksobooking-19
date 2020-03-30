@@ -41,21 +41,13 @@
     }
   };
 
-  var loadDataSucsses = function (data) {
+  var loadDataSuccses = function (data) {
     window.pins.renderPin(data, mapPinsContainer, pinTemplate);
-    window.card.renderCard(data, mapPinsContainer, cardTemplate);
+    window.cards.renderCard(data, mapPinsContainer, cardTemplate);
   };
 
   var loadDataError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '24px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    window.state.renderStateElement(window.state.errorTemplate, window.state.main, errorMessage);
   };
 
   var activatePage = function () {
@@ -63,7 +55,7 @@
       map.classList.remove('map--faded');
       window.form.adForm.classList.remove('ad-form--disabled');
 
-      window.backend.load(loadDataSucsses, loadDataError);
+      window.backend.load(loadDataSuccses, loadDataError);
       window.form.activateForm();
 
       map.addEventListener('click', mapClickHandler);
@@ -72,12 +64,12 @@
     return false;
   };
 
-  var deactivatePage = function () {
+  var deactivateMap = function () {
     if (!map.classList.contains('map--faded')) {
       map.classList.add('map--faded');
       window.form.adForm.classList.add('ad-form--disabled');
-
-      window.form.deactivateForm();
+      window.pins.pinsClean();
+      window.cards.cardsClean();
 
       map.removeEventListener('click', mapClickHandler);
       map.removeEventListener('keydown', mapPressHandler);
@@ -87,7 +79,7 @@
 
   window.map = {
     activatePage: activatePage,
-    deactivatePage: deactivatePage,
+    deactivateMap: deactivateMap,
     mapElement: map,
     MIN_MAP_WIDTH: MIN_MAP_WIDTH,
     MAX_MAP_WIDTH: MAX_MAP_WIDTH,
